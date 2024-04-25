@@ -1,0 +1,56 @@
+﻿@page "/calculations"
+@inject HttpClient Http
+
+<PageTitle>Fi Plan</PageTitle>
+
+<h1>Calculations MVP</h1>
+
+<EditForm Model="userInputs" OnSubmit="RunCalculations">
+    <label>First Name</label>
+    <InputText @bind-Value="userInputs.FirstName">@userInputs.FirstName</InputText>
+
+    <label>Last Name</label>
+    <InputText @bind-Value="userInputs.LastName">@userInputs.LastName</InputText>
+
+    <label>Birth Date</label>
+    <InputDate @bind-Value="userInputs.BirthDate">@userInputs.BirthDate</InputDate>
+
+    <label>Target Retirement Age</label>
+    <InputNumber @bind-Value="userInputs.TargetRetirementAge">@userInputs.TargetRetirementAge</InputNumber>
+
+    <label>Life Expectancy</label>
+    <InputNumber @bind-Value="userInputs.LifeExpectancy">@userInputs.LifeExpectancy</InputNumber>
+
+    <label>Current Savings</label>
+    <InputNumber @bind-Value="userInputs.CurrentSavings">@userInputs.CurrentSavings</InputNumber>
+
+    <label>Monthly Contribution</label>
+    <InputNumber @bind-Value="userInputs.MonthlyContribution">@userInputs.MonthlyContribution</InputNumber>
+
+    <label>Annual Return Rate</label>
+    <InputNumber @bind-Value="userInputs.AnnualReturnRate">@userInputs.AnnualReturnRate</InputNumber>
+
+    <label>Expected Retirement Expense Rate</label>
+    <InputNumber @bind-Value="userInputs.RetirementExpenseRate">@userInputs.RetirementExpenseRate</InputNumber>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+
+</EditForm>
+
+@if(predictedAge != null)
+{
+    <p>Predicted Retirement Age: @predictedAge</p>
+}
+
+@code {
+    int? predictedAge;
+
+    UserInputs userInputs { get; set; } = new UserInputs();
+
+    async Task RunCalculations()
+    {
+        var response = await Http.PostAsJsonAsync<UserInputs>("/api/Calculations", userInputs);
+        var results = await response.Content.ReadFromJsonAsync<CalculationResults>();
+        predictedAge = results?.PredictedRetirementAge;
+    }
+}

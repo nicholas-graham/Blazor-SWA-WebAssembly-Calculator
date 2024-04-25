@@ -1,0 +1,10 @@
+﻿label {
+    display: flex;
+    padding: 10px 0px 0px 0px;
+    align-items: center;
+}
+
+button{
+    display: flex;
+    margin-top: 10px;
+}
